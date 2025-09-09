@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght@0,6..12,75..125,200..1000;1,6..12,75..125,200..1000&display=swap");
+
+body {
+  text-align: center;
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100, "YTLC" 500;
+  background-color: #f3e5f5;
+}
+
+h1 {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 87.5, "YTLC" 500;
+}
+
+.MuiInputBase-input,
+.MuiDataGrid-cell,
+.MuiDataGrid-columnHeader {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100, "YTLC" 500;
+}
+
+.MuiInputBase-input,
+.MuiPickersInputBase-root {
+  background-color: white !important;
+}
+
+.MuiDataGrid-columnHeader {
+  color: #9c27b0;
+}
+
+form {
+  margin: 0 auto;
+}
+
+header {
+  p {
+    font-size: 1.25rem !important;
+  }
+}
+
+div {
+  h2 {
+    font-weight: bold;
+  }
+  p {
+    font-size: 1.5rem;
+  }
+}
+
+footer {
+  text-transform: lowercase;
+  letter-spacing: -1px;
+  text-decoration: underline overline;
+  margin-top: 1rem;
+}
