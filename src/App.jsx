@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.scss";
-import { listAllItems } from "./utils/dynamo";
+import { createItem, listAllItems } from "./utils/dynamo";
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -14,7 +14,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
 function App() {
-  const [expense, setExpense] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [open, setOpen] = useState(false);
   const [expenseEdit, setExpenseEdit] = useState({});
   const [calcExpense, setCalcExpense] = useState({});
@@ -24,13 +24,13 @@ function App() {
     const handleGetExpense = async () => {
       const items = await listAllItems("Spend");
 
-      setExpense(items);
+      setExpenses(items);
     };
 
     handleGetExpense();
   }, []);
 
-
+  // add open and close function to connect to edit modal
 
   const handleCreateExpense = async (event) => {
     event.preventDefault();
@@ -42,15 +42,20 @@ function App() {
       payMethod: event.target.payMethod.value,
       amount: parseFloat(event.target.amount.value),
     };
+    // add console.logs to check newExpense
 
+    await createItem("Spend", newExpense);
 
+    setExpenses((oldExpenses) => {
+      return [...oldExpenses, newExpense];
+    });
 
-
-
-
-
-    
+    event.target.reset();
   };
+
+  // add function for updating expenses
+
+  // add function for deleting expenses
 
   return (
     <>
@@ -95,10 +100,8 @@ function App() {
         </section>
         <section>
           <h2>Expense Tracking</h2>
-
-
-
-
+          {/* add divs for total amount  */}
+          {/* add data grid data table from material ui  */}
         </section>
       </main>
       <footer>&copy; Katarina Andrews</footer>
