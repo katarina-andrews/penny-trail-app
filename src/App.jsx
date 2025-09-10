@@ -219,7 +219,7 @@ function App() {
       <header>
         <h1>PennyTrail</h1>
         <p>
-          Keep track of all your monthly expenses, bills and random purchases{" "}
+          Keep track of all your monthly expenses, bills and random purchases
         </p>
       </header>
       <main>
@@ -333,8 +333,8 @@ function App() {
                         label="Date of Expense"
                         value={expenseEdit.date}
                         onChange={(newValue) =>
-                          setExpenseEdit((prev) => ({
-                            ...prev,
+                          setExpenseEdit((oldExpenses) => ({
+                            ...oldExpenses,
                             date: newValue,
                           }))
                         }
@@ -346,8 +346,8 @@ function App() {
                     label="Expense Name"
                     value={expenseEdit.expenseName}
                     onChange={(e) => {
-                      setExpenseEdit((prev) => ({
-                        ...prev,
+                      setExpenseEdit((oldExpenses) => ({
+                        ...oldExpenses,
                         expenseName: e.target.value,
                       }));
                       validateExpenseName(e.target.value);
@@ -365,8 +365,8 @@ function App() {
                     label="Payment Method"
                     value={expenseEdit.payMethod}
                     onChange={(e) => {
-                      setExpenseEdit((prev) => ({
-                        ...prev,
+                      setExpenseEdit((oldExpenses) => ({
+                        ...oldExpenses,
                         payMethod: e.target.value,
                       }));
                       validatePayMethod(e.target.value);
@@ -384,8 +384,8 @@ function App() {
                     label="Cost $"
                     value={expenseEdit.cost}
                     onChange={(e) => {
-                      setExpenseEdit((prev) => ({
-                        ...prev,
+                      setExpenseEdit((oldExpenses) => ({
+                        ...oldExpenses,
                         cost: e.target.value,
                       }));
                       validateNumberInput(e.target.value);
