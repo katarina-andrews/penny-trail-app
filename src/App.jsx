@@ -307,7 +307,6 @@ function App() {
                 columns={columns}
                 initialState={{ pagination: { paginationModel } }}
                 pageSizeOptions={[5, 10]}
-                disableColumnMenu
                 sx={{
                   "& .MuiDataGrid-virtualScroller": { overflowX: "auto" },
                   "& .MuiDataGrid-main": { minWidth: "100%" },
