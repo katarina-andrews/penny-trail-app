@@ -1,107 +1,67 @@
 import { useState, useEffect } from "react";
 import "./App.scss";
-import {
-  listAllItems,
-  createItem,
-  updateItem,
-  deleteItem,
-} from "./utils/dynamo";
-import dayjs from "dayjs";
+import { listAllItems } from "./utils/dynamo";
+import Total from "./components/Total";
 import Form from "./components/Form";
-import ModalForm from "./components/ModalForm";
-import Table from "./components/Table";
+import GridTable from "./components/GridTable";
+import ModalAlone from "./components/ModalAlone";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [open, setOpen] = useState(false);
   const [expenseEdit, setExpenseEdit] = useState({});
+  const [numberError, setNumberError] = useState(false);
+  const [numberHelper, setNumberHelper] = useState("");
+  const [expenseNameError, setExpenseNameError] = useState(false);
+  const [expenseNameHelper, setExpenseNameHelper] = useState("");
+  const [payMethodError, setPayMethodError] = useState(false);
+  const [payMethodHelper, setPayMethodHelper] = useState("");
 
-   useEffect(() => {
-      const handleGetExpense = async () => {
-        const items = await listAllItems("Spend");
-  
-        setExpenses(items);
-      };
-  
-      handleGetExpense();
-    }, []);
+  useEffect(() => {
+    const handleGetExpense = async () => {
+      const items = await listAllItems("Spend");
 
-  // const handleCreateExpense = async (e) => {
-  //   e.preventDefault();
+      setExpenses(items);
+    };
 
-  //   const newExpense = {
-  //     id: Date.now().toString(),
-  //     date: e.target.date.value,
-  //     expenseName: e.target.expenseName.value,
-  //     payMethod: e.target.payMethod.value,
-  //     cost: parseFloat(e.target.cost.value),
-  //   };
+    handleGetExpense();
+  }, []);
 
-  //   await createItem("Spend", newExpense);
+  const totalCost = expenses.reduce((sum, expense) => {
+    return sum + (parseFloat(expense.cost) || 0);
+  }, 0);
 
-  //   setExpenses((oldExpenses) => {
-  //     return [...oldExpenses, newExpense];
-  //   });
+  const validateExpenseName = (value) => {
+    const textRegex = /^[A-Za-z\s]*$/;
+    if (!textRegex.test(value)) {
+      setExpenseNameError(true);
+      setExpenseNameHelper("Please enter a valid text input.");
+    } else {
+      setExpenseNameError(false);
+      setExpenseNameHelper("");
+    }
+  };
 
-  //   e.target.reset();
-  // };
-
-  //   const handleOpen = (expenseObject) => {
-  //   setExpenseEdit({
-  //     ...expenseObject,
-  //     date: expenseObject.date ? dayjs(expenseObject.date) : null,
-  //   });
-  //   setOpen(true);
-  // };
-  // const handleClose = () => setOpen(false);
-
-  // const handleUpdateExpense = async (e) => {
-  //   e.preventDefault();
-
-  //   const { date, expenseName, payMethod, cost } = expenseEdit;
-  //   console.log(expenseEdit);
-  //   console.log(expenseEdit.id);
-  //   await updateItem(
-  //     "Spend",
-  //     { id: expenseEdit.id },
-  //     {
-  //       date: date ? date.format("MM/DD/YYYY") : "",
-  //       expenseName,
-  //       payMethod,
-  //       cost: parseFloat(cost),
-  //     }
-  //   );
-
-  //   setExpenses((oldExpenses) => {
-  //     return oldExpenses.map((expenseObject) => {
-  //       return expenseObject.id === expenseEdit.id
-  //         ? {
-  //             ...expenseEdit,
-  //             date: date ? date.format("MM/DD/YYYY") : "",
-  //             cost: parseFloat(expenseEdit.cost),
-  //           }
-  //         : expenseObject;
-  //     });
-  //   });
-
-  //   setOpen(false);
-  // };
-
-  //   const handleDeleteExpense = async (id) => {
-  //   await deleteItem("Spend", { id: id });
-  //   console.log(id);
-  //   setExpenses((oldExpenses) => {
-  //     return oldExpenses.filter((expenseObject) => {
-  //       return expenseObject.id != id;
-  //     });
-  //   });
-  // };
-
-  //   const totalCost = expenses.reduce((sum, expense) => {
-  //   return sum + (parseFloat(expense.cost) || 0);
-  // }, 0);
-
-  
+  const validatePayMethod = (value) => {
+    const textRegex = /^[A-Za-z\s]*$/;
+    if (!textRegex.test(value)) {
+      setPayMethodError(true);
+      setPayMethodHelper("Please enter a valid text input.");
+    } else {
+      setPayMethodError(false);
+      setPayMethodHelper("");
+    }
+  };
+  const validateNumberInput = async (value) => {
+    const numberRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
+    if (!numberRegex.test(value)) {
+      setNumberError(true);
+      setNumberHelper("Please enter a valid monetary input.");
+    } else {
+      setNumberError(false);
+      setNumberHelper("");
+    }
+  };
 
   return (
     <>
@@ -113,11 +73,43 @@ function App() {
       </header>
       <main>
         <section>
-          <Form />
+          <Form
+            setExpenses={setExpenses}
+            validateExpenseName={validateExpenseName}
+            validateNumberInput={validateNumberInput}
+            validatePayMethod={validatePayMethod}
+            expenseNameError={expenseNameError}
+            expenseNameHelper={expenseNameHelper}
+            payMethodHelper={payMethodHelper}
+            payMethodError={payMethodError}
+            numberError={numberError}
+            numberHelper={numberHelper}
+          />
         </section>
         <section>
-          <Table />
-<ModalForm />
+          <Total totalCost={totalCost} />
+          <GridTable
+            expenses={expenses}
+            setExpenses={setExpenses}
+            setExpenseEdit={setExpenseEdit}
+            setOpen={setOpen}
+          />
+          <ModalAlone
+            setExpenses={setExpenses}
+            setExpenseEdit={setExpenseEdit}
+            setOpen={setOpen}
+            open={open}
+            expenseEdit={expenseEdit}
+            validateNumberInput={validateNumberInput}
+            validatePayMethod={validatePayMethod}
+            validateExpenseName={validateExpenseName}
+            expenseNameError={expenseNameError}
+            expenseNameHelper={expenseNameHelper}
+            payMethodError={payMethodError}
+            payMethodHelper={payMethodHelper}
+            numberError={numberError}
+            numberHelper={numberHelper}
+          />
         </section>
       </main>
       <footer>&copy; Katarina Andrews</footer>

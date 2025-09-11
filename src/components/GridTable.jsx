@@ -1,29 +1,18 @@
-import { useState, useEffect } from "react";
-import { listAllItems,
-     createItem,
-  updateItem,
-  deleteItem,
- } from "../utils/dynamo";
+import React from "react";
+import dayjs from "dayjs";
+import { deleteItem } from "../utils/dynamo";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function Table() {
-  const [expenses, setExpenses] = useState([]);
-   const [expenseEdit, setExpenseEdit] = useState({});
-
-  useEffect(() => {
-    const handleGetExpense = async () => {
-      const items = await listAllItems("Spend");
-
-      setExpenses(items);
-    };
-
-    handleGetExpense();
-  }, []);
-
+export default function GridTable({
+  expenses,
+  setExpenses,
+  setOpen,
+  setExpenseEdit,
+}) {
   const handleOpen = (expenseObject) => {
     setExpenseEdit({
       ...expenseObject,
@@ -31,7 +20,6 @@ export default function Table() {
     });
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
 
   const handleDeleteExpense = async (id) => {
     await deleteItem("Spend", { id: id });
@@ -42,10 +30,6 @@ export default function Table() {
       });
     });
   };
-
-  const totalCost = expenses?.reduce((sum, expense) => {
-    return sum + (parseFloat(expense.cost) || 0);
-  }, 0);
 
   const columns = [
     { field: "date", headerName: "Date", flex: 1, minWidth: 100 },
@@ -98,31 +82,23 @@ export default function Table() {
 
   const paginationModel = { page: 0, pageSize: 5 };
 
-  console.log("Table received expenses:", expenses);
-
   return (
-    <>
-      <div style={{ marginTop: "16px" }}>
-        <h2>Total Expense Cost</h2> <p>${totalCost?.toFixed(2)}</p>
+    <Paper sx={{ width: "100%", maxWidth: "800px", margin: "0 auto", py: 3 }}>
+      <div>
+        <DataGrid
+          rows={expenses}
+          columns={columns}
+          initialState={{ pagination: { paginationModel } }}
+          pageSizeOptions={[5, 10]}
+          sx={{
+            "& .MuiDataGrid-virtualScroller": { overflowX: "auto" },
+            "& .MuiDataGrid-main": { minWidth: "100%" },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              fontWeight: "bold",
+            },
+          }}
+        />
       </div>
-      <Paper sx={{ width: "100%", maxWidth: "800px", margin: "0 auto", py: 3 }}>
-        <div>
-          <DataGrid
-            rows={expenses}
-            columns={columns}
-            initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[5, 10]}
-            disableColumnMenu
-            sx={{
-              "& .MuiDataGrid-virtualScroller": { overflowX: "auto" },
-              "& .MuiDataGrid-main": { minWidth: "100%" },
-              "& .MuiDataGrid-columnHeaderTitle": {
-                fontWeight: "bold",
-              },
-            }}
-          />
-        </div>
-      </Paper>
-    </>
+    </Paper>
   );
 }
