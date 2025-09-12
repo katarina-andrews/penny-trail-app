@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
 
-export default function GridModal({
+export default function ModalEdit({
   setExpenses,
   setOpen,
   open,

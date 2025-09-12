@@ -4,7 +4,7 @@ import { listAllItems } from "./utils/dynamo";
 import Total from "./components/Total";
 import Form from "./components/Form";
 import GridTable from "./components/GridTable";
-import ModalAlone from "./components/ModalAlone";
+import ModalEdit from "./components/ModalEdit";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -94,7 +94,7 @@ function App() {
             setExpenseEdit={setExpenseEdit}
             setOpen={setOpen}
           />
-          <ModalAlone
+          <ModalEdit
             setExpenses={setExpenses}
             setExpenseEdit={setExpenseEdit}
             setOpen={setOpen}
