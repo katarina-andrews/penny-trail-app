@@ -14,6 +14,7 @@ export default function GridTable({
   setExpenseEdit,
 }) {
   const handleOpen = (expenseObject) => {
+    console.log(expenseObject);
     setExpenseEdit({
       ...expenseObject,
       date: expenseObject.date ? dayjs(expenseObject.date) : null,
@@ -59,7 +60,7 @@ export default function GridTable({
       width: 100,
       renderCell: (expenseObject) => {
         return (
-          <IconButton onClick={() => handleOpen(expenseObject)}>
+          <IconButton onClick={() => handleOpen(expenseObject.row)}>
             <EditIcon />
           </IconButton>
         );
